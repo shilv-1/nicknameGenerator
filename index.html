@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>王者荣耀昵称生成器</title>
+    <link rel="shortcut icon" href="./images/favicon.ico" type="image/x-icon">
+    <!-- 重置样式 -->
+    <link rel="stylesheet" href="./css/reset.css">
+    <script>
+        (function(){
+            var designWidth = 970;   
+            var designRem = 1;    
+            var vw = window.innerWidth; 
+            var scale = vw/designWidth;
+            document.documentElement.style.fontSize = scale*designRem + 'px';
+        })();
+    </script>
+    <link rel="stylesheet" href="./css/index.css">
+    <!-- 引入vue.js -->
+    <script src="./js/vue.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- 头部: logo, 标题 -->
+        <header class="header">
+            <!-- 左边logo -->
+            <div class="logo-wrap">
+                <image class="logo" src="./images/wzlogo.jpg"/>
+            </div>
+            <!-- 中间标题 -->
+            <div class="title-wrap">
+                <span class="title">王者荣耀昵称生成器(Chrome)</span>
+            </div>
+        </header>
+        
+        <!-- 主体 -->
+        <main class="main" id="app">
+            <!-- 昵称生成 -->
+            <div class="nickname-wrap">
+                <!-- 1.个性昵称 -->
+                <div class="specialName nameGenerated">
+                    <div class="specialName-title subtitle">个性昵称</div>
+                    <table class="specialName-table">
+                        <tr>
+                            <td>第一位</td>
+                            <td>第二位</td>
+                            <td>第三位</td>
+                            <td>第四位</td>
+                            <td>第五位</td>
+                            <td>第六位</td>
+                        </tr>
+                        <tr>
+                            <td v-for="(item, index) in inputArr" :key="index">
+                                <input class="nameInput" type="text" maxlength="1" v-model="item" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">字符对应的unicode编码</td>
+                        </tr>
+                        <tr>
+                            <td  v-for="(item, index) in inputArr" :key="index">{{item.charCodeAt(0)}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">请输入昵称</td>
+                            <td class="inputStr" colspan="3">
+                                <input type="text" id="inputName" v-model="inputName" maxlength="6">
+                            </td>
+                            <td>
+                                <button class="copy" @click="copyName">复制</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <button class="specialBtn" @click="specialGenerate">生成个性昵称</button>
+                            </td>
+                            <td colspan="2">
+                                <button class="repeatedBtn" @click="repeatedGenerate">生成重复昵称</button>
+                            </td>
+                            <td colspan="2">
+                                <button class="blankBtn" @click=" blankGenerate">生成空白昵称</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <!-- 字符及编码查看 -->
+            <div class="charCode-wrap">
+                <div class="searchTitle">字符及编码查询</div>
+                <table class="searchTable">
+                    <tr>
+                        <td colspan="4">请输入编码查询范围:</td>
+                        <td colspan="3">最小值</td>
+                        <td colspan="3">最大值</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <button class="searchBtn" @click="searchCode">点击查询</button>
+                        </td>
+                        <td colspan="3">
+                            (0)<input type="number" name="minNum" id="minNum" maxlength="5" v-model="minNum" min="0" max="65535">
+                        </td>
+                        <td colspan="3">
+                            (65535)<input type="number" name="maxNum" id="maxNum" maxlength="5" v-model="maxNum" min="0" max="65535">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="10">查询结果:</td>
+                    </tr>
+                    <tr>
+                        <td class="codeShow" colspan="10">
+                            <div class="codeShow-wrap">
+                                <div class="codeShow-item" v-for="(item, index) in charArr" :key="index">
+                                    <div class="charShow">&nbsp;&nbsp; {{item}}</div>
+                                    <div class="codepointShow">&nbsp;&nbsp; {{item.charCodeAt(0)}}</div>
+                                    <div><button @click="copyChar(item)">复制</button></div>
+                                </div>
+                                
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </main>
+        <script>
+            var vm = new Vue({
+                el: '#app',
+                data: {
+                    // 空白字符编码: 8232~8239 8287~8303.....
+                    blankCodes: [8232,8233,8234,8235,8236,8237,8238,8239,8287,8288,8289,8290,8291,8292,8293],
+                    inputName: '',
+                    inputArr: [],
+                    minNum: 3840,
+                    maxNum: 4350,
+                    charArr: []
+                },
+                methods: {
+                    specialGenerate() {
+                        var inputArr = this.inputArr;
+                        if (inputArr.length == 0 ) {
+                            this.msg = '请输入昵称'
+                        }else {
+                            this.outputStr01 = inputArr.join('')
+                        }
+                    },
+                    repeatedGenerate() {
+                        console.log(this.blankCodeToStr)
+                        var inputArr = this.inputArr
+                        var blankCodeToStr = this.blankCodeToStr
+                        if(inputArr.length == 0) {
+                            alert('请输入昵称,最多5位!')
+                        }else if(inputArr.length > 5) {
+                            alert('重复昵称不能超过5位')
+                        }else {
+                            // 向数组的随机索引插入随机空白字符
+                            for (let index = inputArr.length; index < 6; index++) {
+                                // 随机索引
+                                let insertIndex = Math.floor(Math.random() * inputArr.length)
+                                // 随机空白字符
+                                let blankcodeIndex = Math.floor(Math.random()* blankCodeToStr.length)
+                                let blankcode = blankCodeToStr[blankcodeIndex]
+                                inputArr.splice(insertIndex,0,blankcode)
+                            }
+                        }
+                        this.inputArr = inputArr
+                        this.inputName = inputArr.join('')
+                    },
+                    blankGenerate() {
+                        var isClear = confirm("警告,即将清空您输入的昵称!")
+                        if(isClear) {
+                            this.inputName = ''
+                        }
+                        var inputArr = [];
+                        var blankCodeToStr = this.blankCodeToStr
+                        for (let index = 0; index < 6; index++) {
+                            let blankcodeIndex = Math.floor(Math.random()* blankCodeToStr.length)
+                            let blankcode = blankCodeToStr[blankcodeIndex]
+                            inputArr[index] = blankcode;
+                        }
+                        console.log(inputArr);
+                        this.inputArr = inputArr;
+                        this.inputName = inputArr.join('')
+                        
+                    },
+                    copyName() {
+                        var th = this
+                        var inputName = this.inputName
+                        navigator.clipboard.writeText(inputName)
+                            .then(() => {
+                                // Success!
+                                // alert('复制成功!')
+                            })
+                            .catch(err => {
+                                alert('复制失败', err);
+                            });
+                    },
+                    searchCode() {
+                        var minNum = this.minNum
+                        var maxNum = this.maxNum
+                        minNum > 65535 ? minNum=65535 : '';
+                        maxNum > 65535 ? maxNum=65535 : '';
+                        var min = minNum;
+                        var max = maxNum;
+                        if (maxNum - minNum < 0) {
+                            minNum = max
+                            maxNum = min
+                        }
+                        this.minNum = minNum
+                        this.maxNum = maxNum
+                        var charArr = []
+                        for (let index = minNum; index < maxNum; index++) {
+                            charArr.push(String.fromCharCode(index))  
+                        }
+                        this.charArr = charArr;
+                        console.log(this.charArr)
+                    },
+                    copyChar(item) {
+                        navigator.clipboard.writeText(item)
+                            .then(() => {
+                                // Success!
+                                // alert('复制成功!')
+                            })
+                            .catch(err => {
+                                alert('复制失败', err);
+                            });
+                    }
+                },
+                computed: {
+                    blankCodeToStr: {
+                        get: function() {
+                            var blankCodes = this.blankCodes;
+                            var codeToStr = []
+                            for (let index = 0; index < blankCodes.length; index++) {
+                                codeToStr[index] = String.fromCharCode(blankCodes[index])
+                            }
+                            console.log(codeToStr.length);
+                            return codeToStr;
+                        }
+                    }
+                },
+                watch: {
+                    inputName: function(newVal, oldVal) {
+                        this.inputArr = newVal.split('');
+                    }
+                }
+            })
+        </script>
+    </div>
+</body>
+
+</html>

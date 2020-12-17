@@ -1,0 +1,140 @@
+body {
+    
+}
+.container {
+    width: 100%;
+}
+
+/* header */
+.header {
+    width: 100%;
+    height: 80rem;
+    position: relative;
+}
+
+/* logo */
+.logo-wrap {
+    position: absolute;
+    left: 0rem;
+    top: 0rem;
+    width: 130rem;
+    height: 80rem;
+    
+}
+.logo-wrap .logo {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 121rem;
+    height: 75rem;
+}
+
+/* title */
+.title-wrap {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    line-height: 80rem;
+    height: 80rem;
+}
+.title-wrap .title {
+    font-size: 25rem;
+}
+
+/* 主体: main */
+.main {
+    /* width: 90%; */
+    /* position: relative; */
+    
+}
+/* 昵称生成 */
+.nickname-wrap {
+    width: 100%;
+    height: 450rem;
+    margin: 10rem 0;
+    position: relative;
+}
+.nameGenerated {
+    position: absolute;
+    width: 80%;
+    left: 50%;
+    top: 25rem;
+    transform: translateX(-50%);
+    background-color: rgb(219, 207, 207);
+}
+.subtitle {
+    font-size: 18rem;
+    text-align: center;
+    margin-bottom: 15rem;
+}
+/* 个性昵称列表 */
+.specialName-table {
+    font-size: 16rem;
+    border: 1rem solid yellow;
+    width: 100%;
+}
+.specialName-table td {
+    text-align: center;
+    border: 1rem solid black;
+    font-size: 15rem;
+    padding: 5rem 5rem;
+}
+.nameInput {
+    width: 45rem;
+    height: 45rem;
+    font-size: 40rem;
+}
+#inputName {
+    width: 350rem;
+    height: 50rem;
+    font-size: 25rem;
+}
+input {
+    color: royalblue;
+}
+
+/* 字符及编码查看 */
+.charCode-wrap {
+    position: relative;
+}
+.searchTitle {
+    text-align: center;
+    background-color: teal;
+    font-size: 20rem;
+}
+.searchTable {
+    position: absolute;
+    top: 50rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 16rem;
+    border: 1rem solid yellow;
+    width: 70%;
+}
+.searchTable td {
+    text-align: center;
+    border: 1rem solid black;
+    padding: 10rem 5rem;
+}
+
+.codeShow-item {
+    width: 16%;
+    float: left;
+    text-align: left;
+    
+    border: 1rem solid black;
+}
+
+.charShow {
+    text-align: center;
+    font-size: 40rem;
+    color: green;
+}
+.codepointShow {
+    text-align: center;
+    font-size: 15rem;
+    background-color: mediumspringgreen;
+}
